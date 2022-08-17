@@ -1,17 +1,17 @@
 import cv2
 import time
-
-cam = cv2.VideoCapture(0)
+import webcam_reader
 
 # vars for calculating fps
 
 prev_frame_time = 0
 new_frame_time = 0
 
-while True:
+cam = webcam_reader.WebcamVideoStream(0).start()
 
-    ret, frame = cam.read()
+while True:
     
+    frame = cam.read()
     new_frame_time = time.time()
     fps = int(1 / (new_frame_time - prev_frame_time))
     prev_frame_time = new_frame_time
@@ -22,19 +22,18 @@ while True:
     cv2.putText(
             frame, 
             str(fps),
-            (7,70),
+            (7,30),
             font,
-            3,
+            1,
             (100, 255, 0),
-            3,
+            2,
             cv2.LINE_AA)
 
 
     cv2.imshow('frame', frame)
 
     if cv2.waitKey(1) == ord('q'):
+        cam.stop()
+        cv2.destroyAllWindows()
         break
 
-cam.release()
-
-cv2.destroyAllWindows()
